@@ -134,10 +134,10 @@
                                 if (newValue.length > column.expandableFrom){
                                     newValue = newValue.substring(0, column.expandableFrom)
                                     if (typeof this.expanded[rowData.id] === 'undefined'){
-                                        Vue.set(this.expanded, ''+rowData.id, {})
+                                        Vue.set(data.expanded, ''+rowData.id, {})
                                     }
                                     if (typeof this.expanded[rowData.id][column.name] === 'undefined'){
-                                        Vue.set(this.expanded[rowData.id], ''+[column.name], false)
+                                        Vue.set(data.expanded[rowData.id], [column.name], false)
                                     }
                                     var expanding = true
                                 }
