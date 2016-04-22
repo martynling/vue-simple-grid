@@ -25,8 +25,8 @@
                </td>
                <td v-for="column in visibleColumns" @click="cellClicked(rowData, column)">
                    <span v-if="alreadyEscaped(column)">
-                       <span v-if="expanded[rowData.id] && expanded[rowData.id][column.name]">{{{ formatData(rowData, column, true) }}}</span>
-                       <span v-else>{{{ formatData(rowData, column) }}}</span>
+                       <span v-show="expanded[rowData.id] && expanded[rowData.id][column.name]">{{{ formatData(rowData, column, true) }}}</span>
+                       <span v-show="!expanded[rowData.id] || expanded[rowData.id][column.name]">{{{ formatData(rowData, column) }}}</span>
                    </span>
                    <span v-if="!alreadyEscaped(column)">{{ formatData(rowData, column) }}</span>
                </td>
@@ -134,9 +134,9 @@
                                 if (newValue.length > column.expandableFrom){
                                     newValue = newValue.substring(0, column.expandableFrom)
                                     if (typeof this.expanded[rowData.id] === 'undefined')
-                                        this.$set(this.expanded[rowData.id], {})
+                                        this.expanded[rowData.id] = {}
                                     if (typeof this.expanded[rowData.id][column.name] === 'undefined')
-                                        this.$set(this.expanded[rowData.id][column.name], false)
+                                        this.expanded[rowData.id][column.name] = false
                                     var expanding = true
                                 }
                             }
