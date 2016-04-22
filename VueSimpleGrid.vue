@@ -128,7 +128,7 @@
                     case 'string':
                         var newValue = rawValue
                         if (column.dataFormat == 'paragraph') {
-                            if (column.expandable && (!rowData.expanded || !rowData.expanded[column.name]))
+                            if (column.expandable && (!rowData.expanded || !rowData.expanded[column.name])){
                                 if (newValue.length > column.expandableFrom){
                                     newValue = newValue.substring(0, column.expandableFrom)
                                     if (!rowData.expanded)
@@ -136,6 +136,7 @@
                                     rowData.expanded[column.name] = false
                                     var expanding = true
                                 }
+                            }
                             newValue = Vue.filter('nl2br')(Vue.filter('htmlEncode')(newValue))
                             if (expanding)
                                 newValue += ' <a href="#">' + column.expandableText + '</a>'
