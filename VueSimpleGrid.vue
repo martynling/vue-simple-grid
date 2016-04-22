@@ -25,8 +25,8 @@
                </td>
                <td v-for="column in visibleColumns" @click="cellClicked(rowData, column)">
                    <span v-if="alreadyEscaped(column)">
-                       <span v-show="expanded(rowData, column)">{{{ formatData(rowData, column, true) }}}</span>
-                       <span v-show="!expanded(rowData, column)">{{{ formatData(rowData, column) }}}</span>
+                       <span v-show="expanded[rowData.id][column.name]">{{{ formatData(rowData, column, true) }}}</span>
+                       <span v-show="!expanded[rowData.id][column.name]">{{{ formatData(rowData, column) }}}</span>
                    </span>
                    <span v-if="!alreadyEscaped(column)">{{ formatData(rowData, column) }}</span>
                </td>
@@ -74,7 +74,9 @@
         },
 
         data: function () {
-            return {};
+            return {
+                expanded: {}
+            };
         },
 
         computed: {
@@ -101,9 +103,7 @@
             },
 
             cellClicked(rowData, column) {
-                if (rowData.expanded){
-                    rowData.expanded[column.name] = !rowData.expanded[column.name]
-                }
+                this.expanded[rowData.id][column.name] = !this.expanded[rowData.id][column.name]
                 this.$dispatch('cell-clicked', {
                     rowData: rowData,
                     column: column
@@ -112,10 +112,6 @@
 
             columnClass(column) {
                 return column.notSortable ? '' : 'clickable'
-            },
-
-            expanded(rowData, column) {
-                return rowData.expanded && rowData.expanded[column.name]
             },
 
             formatData(rowData, column, expanded = false) {
@@ -137,9 +133,7 @@
                             if (column.expandable && !expanded){
                                 if (newValue.length > column.expandableFrom){
                                     newValue = newValue.substring(0, column.expandableFrom)
-                                    if (!rowData.expanded)
-                                        rowData.expanded = {}
-                                    rowData.expanded[column.name] = false
+                                    this.expanded[rowData.id][column.name] = false
                                     var expanding = true
                                 }
                             }
