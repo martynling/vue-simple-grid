@@ -102,8 +102,8 @@
                 if (rowData.expanded){
                     rowData.expanded[column.name] = !rowData.expanded[column.name]
                     // Hack to force the grid to refresh?
-                    rowData.push({});
-                    rowData.pop();
+                    this.data.push({});
+                    this.data.pop();
                 }
                 this.$dispatch('cell-clicked', {
                     rowData: rowData,
