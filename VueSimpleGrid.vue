@@ -25,8 +25,8 @@
                </td>
                <td v-for="column in visibleColumns" @click="cellClicked(rowData, column)">
                    <span v-if=""></span>
-                   <span v-if="alreadyEscaped(column)">{{{ formatData(rowData[column.name], column) }}}</span>
-                   <span v-if="!alreadyEscaped(column)">{{ formatData(rowData[column.name], column) }}</span>
+                   <span v-if="alreadyEscaped(column)">{{{ formatData(rowData, column) }}}</span>
+                   <span v-if="!alreadyEscaped(column)">{{ formatData(rowData, column) }}</span>
                </td>
            </tr>
        </table>
@@ -99,8 +99,8 @@
             },
 
             cellClicked(rowData, column) {
-                if (column.expandable){
-                    column.expanded = !column.expanded
+                if (rowData.expanded){
+                    rowData.expanded[column.name] = !rowData.expanded[column.name]
                 }
                 this.$dispatch('cell-clicked', {
                     rowData: rowData,
@@ -112,7 +112,8 @@
                 return column.notSortable ? '' : 'clickable'
             },
 
-            formatData(rawValue, column) {
+            formatData(rowData, column) {
+                var rawValue = rowData[column.name]
                 switch (column.dataType) {
                     case 'date':
                         if (column.dataFormat)
@@ -127,10 +128,17 @@
                     case 'string':
                         var newValue = rawValue
                         if (column.dataFormat == 'paragraph') {
-                            newValue = Vue.filter('htmlEncode')(newValue)
-                            if (column.expandable && !column.expanded)
-                                newValue = newValue.substring(0, column.expandableFrom) + ' <a href="#">' + column.expandableLinkText + '</a>'
-                            newValue = Vue.filter('nl2br')(newValue)
+                            if (column.expandable && (!rowData.expanded || !rowData.expanded[column.name]))
+                                if (newValue.length > column.expandableFrom){
+                                    newValue = newValue.substring(0, column.expandableFrom)
+                                    if (!rowData.expanded)
+                                        rowData.expanded = []
+                                    rowData.expanded[column.name] = false
+                                    var expanding = true
+                                }
+                            newValue = Vue.filter('nl2br')(Vue.filter('htmlEncode')(newValue))
+                            if (expanding)
+                                newValue += ' <a href="#">' + column.expandableText + '</a>'
                         }
                         return newValue
                 }
