@@ -132,7 +132,7 @@
                                 if (newValue.length > column.expandableFrom){
                                     newValue = newValue.substring(0, column.expandableFrom)
                                     if (!rowData.expanded)
-                                        rowData.expanded = []
+                                        rowData.expanded = {}
                                     rowData.expanded[column.name] = false
                                     var expanding = true
                                 }
