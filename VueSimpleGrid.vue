@@ -24,8 +24,10 @@
                    </ul>
                </td>
                <td v-for="column in visibleColumns" @click="cellClicked(rowData, column)">
-                   <span v-if=""></span>
-                   <span v-if="alreadyEscaped(column)">{{{ formatData(rowData, column) }}}</span>
+                   <span v-if="alreadyEscaped(column)">
+                       <span v-if="expanded(rowData, column)">{{{ formatData(rowData, column, true) }}}</span>
+                       <span v-if="!expanded(rowData, column)">{{{ formatData(rowData, column) }}}</span>
+                   </span>
                    <span v-if="!alreadyEscaped(column)">{{ formatData(rowData, column) }}</span>
                </td>
            </tr>
@@ -101,9 +103,6 @@
             cellClicked(rowData, column) {
                 if (rowData.expanded){
                     rowData.expanded[column.name] = !rowData.expanded[column.name]
-                    // Hack to force the grid to refresh?
-                    this.data.push({});
-                    this.data.pop();
                 }
                 this.$dispatch('cell-clicked', {
                     rowData: rowData,
@@ -115,7 +114,11 @@
                 return column.notSortable ? '' : 'clickable'
             },
 
-            formatData(rowData, column) {
+            expanded(rowData, column) {
+                return rowData.expanded && rowData.expanded[column.name]
+            },
+
+            formatData(rowData, column, expanded = false) {
                 var rawValue = rowData[column.name]
                 switch (column.dataType) {
                     case 'date':
@@ -131,7 +134,7 @@
                     case 'string':
                         var newValue = rawValue
                         if (column.dataFormat == 'paragraph') {
-                            if (column.expandable && (!rowData.expanded || !rowData.expanded[column.name])){
+                            if (column.expandable && !expanded){
                                 if (newValue.length > column.expandableFrom){
                                     newValue = newValue.substring(0, column.expandableFrom)
                                     if (!rowData.expanded)
