@@ -133,10 +133,12 @@
                             if (column.expandable && !expanded){
                                 if (newValue.length > column.expandableFrom){
                                     newValue = newValue.substring(0, column.expandableFrom)
-                                    if (typeof this.expanded[rowData.id] === 'undefined')
-                                        this.$set(this.expanded, rowData.id, {})
-                                    if (typeof this.expanded[rowData.id][column.name] === 'undefined')
-                                        this.$set(this.expanded[rowData.id], [column.name], false)
+                                    if (typeof this.expanded[rowData.id] === 'undefined'){
+                                        this.$set(this.expanded, ''+rowData.id, {})
+                                    }
+                                    if (typeof this.expanded[rowData.id][column.name] === 'undefined'){
+                                        this.$set(this.expanded[rowData.id], ''+[column.name], false)
+                                    }
                                     var expanding = true
                                 }
                             }
