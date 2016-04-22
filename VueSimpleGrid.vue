@@ -25,8 +25,8 @@
                </td>
                <td v-for="column in visibleColumns" @click="cellClicked(rowData, column)">
                    <span v-if="alreadyEscaped(column)">
-                       <span v-show="expanded[rowData.id][column.name]">{{{ formatData(rowData, column, true) }}}</span>
-                       <span v-show="!expanded[rowData.id][column.name]">{{{ formatData(rowData, column) }}}</span>
+                       <span v-if="expanded[rowData.id] && expanded[rowData.id][column.name]">{{{ formatData(rowData, column, true) }}}</span>
+                       <span v-else>{{{ formatData(rowData, column) }}}</span>
                    </span>
                    <span v-if="!alreadyEscaped(column)">{{ formatData(rowData, column) }}</span>
                </td>
