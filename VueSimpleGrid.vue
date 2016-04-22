@@ -99,6 +99,9 @@
             },
 
             cellClicked(rowData, column) {
+                if (column.expandable){
+                    column.expanded = !column.expanded
+                }
                 this.$dispatch('cell-clicked', {
                     rowData: rowData,
                     column: column
@@ -122,9 +125,14 @@
                         else
                             return Vue.filter('momentize')(rawValue, 'lll')
                     case 'string':
-                        if (column.dataFormat == 'paragraph')
-                            return Vue.filter('nl2br')(Vue.filter('htmlEncode')(rawValue))
-                        break
+                        var newValue = rawValue
+                        if (column.dataFormat == 'paragraph') {
+                            newValue = Vue.filter('htmlEncode')(newValue)
+                            if (column.expandable && !column.expanded)
+                                newValue = newValue.substring(0, column.expandableFrom) + ' <a href="#">' + column.expandableLinkText + '</a>'
+                            newValue = Vue.filter('nl2br')(newValue)
+                        }
+                        return newValue
                 }
                 return rawValue
             },
