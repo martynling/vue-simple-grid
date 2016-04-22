@@ -133,6 +133,8 @@
                             if (column.expandable && !expanded){
                                 if (newValue.length > column.expandableFrom){
                                     newValue = newValue.substring(0, column.expandableFrom)
+                                    if (!this.expanded[rowData.id])
+                                        this.expanded[rowData.id] = {}
                                     this.expanded[rowData.id][column.name] = false
                                     var expanding = true
                                 }
